@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    天才第一步！
+    <dv-border-box-11 title="dv-border-box-11">dv-border-box-11</dv-border-box-11>
   </div>
 </template>
 
