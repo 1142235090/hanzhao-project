@@ -1,7 +1,5 @@
 <template>
-  <div id="nav">
-  </div>
-  <router-view/>
+  <router-view />
 </template>
 
 <style lang="less">
@@ -10,7 +8,18 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: white;
+  height: 100%;
+  width: 100%;
 }
-
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url("./assets/background.png");
+}
+html {
+  height: 100%;
+  background-color: #282c34;
+}
 </style>
