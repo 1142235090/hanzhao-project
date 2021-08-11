@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
+    "cesium": "^1.84.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.28",
     "vue": "^3.0.0",
@@ -46,7 +47,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-multi-spaces": "off"
+    }
   },
   "browserslist": [
     "> 1%",

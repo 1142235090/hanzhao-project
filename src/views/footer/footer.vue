@@ -31,6 +31,9 @@ export default {
 .container * {
   vertical-align: middle;
 }
+.container {
+  margin-top: 20px;
+}
 .footer-myself {
   position: absolute;
   float: left;

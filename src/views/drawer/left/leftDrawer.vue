@@ -1,8 +1,18 @@
 <template>
-  <h1>Template</h1>
+  <div>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+    <el-button @click="to">默认按钮</el-button>
+  </div>
 </template>
 
 <script>
+import component from '@/views/cesium/main'
+
 export default {
   name: 'leftdrawer',
   data () {
@@ -26,8 +36,15 @@ export default {
 
   },
   methods: {
-    // type your function
-
+    to () {
+      const router = this.$router
+      router.addRoute({
+        path: '/cesium',
+        name: 'cesium',
+        component: component
+      })
+      this.$router.push('/cesium')
+    }
   },
   created () {
 

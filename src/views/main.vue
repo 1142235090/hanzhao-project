@@ -21,12 +21,14 @@
                v-model="leftDrawer"
                :direction="'ltr'"
                destroy-on-close>
+      <leftDrawer></leftDrawer>
     </el-drawer>
     <!-- 右侧弹出框 -->
     <el-drawer title="个人中心"
                v-model="rightDrawer"
                :direction="'rtl'"
                destroy-on-close>
+      <rightDrawer></rightDrawer>
     </el-drawer>
   </div>
 </template>
@@ -36,6 +38,8 @@ import sellheader from './header/header'
 import sellnav from './nav/nav'
 import sellcontent from './content/content'
 import sellfooter from './footer/footer.vue'
+import leftDrawer from './drawer/left/leftDrawer.vue'
+import rightDrawer from './drawer/right/rightDrawer.vue'
 
 export default {
   name: 'mainView',
@@ -46,7 +50,9 @@ export default {
     sellheader,
     sellnav,
     sellfooter,
-    sellcontent
+    sellcontent,
+    rightDrawer,
+    leftDrawer
   },
   data () {
     return {
