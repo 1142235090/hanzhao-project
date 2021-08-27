@@ -149,10 +149,10 @@ export default {
 
 <style scoped lang='less'>
 @import "../../../../node_modules/cesium/Build/Cesium/Widgets/widgets.css";
-/deep/ .cesium-widget-credits {
+:deep(.cesium-widget-credits) {
   visibility: hidden;
 }
-/deep/ .cesium-infoBox-visible {
+:deep(.cesium-infoBox-visible) {
   visibility: hidden;
 }
 </style>
