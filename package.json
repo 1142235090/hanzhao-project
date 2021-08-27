@@ -10,8 +10,14 @@
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
     "cesium": "^1.84.0",
+    "copy-webpack-plugin": "^6.0.3",
     "core-js": "^3.6.5",
+    "echarts": "^5.1.2",
     "element-plus": "^1.0.2-beta.28",
+    "heatmap.js": "^2.0.5",
+    "leaflet": "^1.7.1",
+    "less-loader": "^6.0.0",
+    "style-loader": "^1.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.0-0"
@@ -32,7 +38,6 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
     "less": "^3.0.4",
-    "less-loader": "^5.0.0",
     "vue-cli-plugin-element-plus": "0.0.13"
   },
   "eslintConfig": {

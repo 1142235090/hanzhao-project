@@ -20,11 +20,13 @@
     <el-drawer title="菜单导航"
                v-model="leftDrawer"
                :direction="'ltr'"
+               :size="'20%'"
                destroy-on-close>
       <leftDrawer></leftDrawer>
     </el-drawer>
     <!-- 右侧弹出框 -->
     <el-drawer title="个人中心"
+               :size="'20%'"
                v-model="rightDrawer"
                :direction="'rtl'"
                destroy-on-close>
@@ -34,10 +36,10 @@
 </template>
 
 <script>
-import sellheader from './header/header'
-import sellnav from './nav/nav'
-import sellcontent from './content/content'
-import sellfooter from './footer/footer.vue'
+import sellheader from './main/header/header'
+import sellnav from './main/nav/nav'
+import sellcontent from './main/content/content'
+import sellfooter from './main/footer/footer.vue'
 import leftDrawer from './drawer/left/leftDrawer.vue'
 import rightDrawer from './drawer/right/rightDrawer.vue'
 

@@ -3,9 +3,14 @@ import main from '../views/main'
 
 const routes = [
   {
-    path: '/main',
+    path: '/',
     name: 'main',
-    component: main
+    component: main,
+    children: [{
+      path: '/main',
+      name: 'main',
+      component: main
+    }]
   }
 ]
 
