@@ -1,5 +1,13 @@
 <template>
   <div style="height: 100%; width: 100%">
+    <div id="enums"
+         @click="menusClick()">
+      菜单导航
+    </div>
+    <div id="personal"
+         @click="myselfClick()">
+      用户中心
+    </div>
     <!-- 头部区域 -->
     <div class="body-header-div">
       <sellheader></sellheader>
@@ -62,6 +70,14 @@ export default {
       leftDrawer: false,
       // 右侧弹出框
       rightDrawer: false
+    }
+  },
+  methods: {
+    menusClick () {
+      this.leftDrawer = true
+    },
+    myselfClick () {
+      this.rightDrawer = true
     }
   }
 }

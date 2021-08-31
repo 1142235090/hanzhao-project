@@ -7,23 +7,11 @@
          alt="">
     <a> 工作时间早晨七点 </a>
   </div>
-  <dv-border-box-9 class="footer-button footer-menus"
-                   @click="menusClick()"><a>菜单导航</a></dv-border-box-9>
-  <dv-border-box-9 class="footer-button footer-myself"
-                   @click="myselfClick()"><a>个人中心</a></dv-border-box-9>
 </template>
 
 <script>
 export default {
-  name: 'sellfooter',
-  methods: {
-    menusClick () {
-      this.$parent.leftDrawer = true
-    },
-    myselfClick () {
-      this.$parent.rightDrawer = true
-    }
-  }
+  name: 'sellfooter'
 }
 </script>
 
