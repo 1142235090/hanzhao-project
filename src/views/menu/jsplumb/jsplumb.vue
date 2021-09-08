@@ -3,56 +3,56 @@
     <div class="item">
       <div id="item-1"
            title="获取格点数据"
-           class="state-item">获取格点数据</div>
+           class="state-item">item-1</div>
       <div id="item-2"
            title="获取土壤水分数据"
-           class="state-item">获取土壤水分数据</div>
+           class="state-item">item-2</div>
       <div id="item-3"
            title="获取温度降雨数据"
-           class="state-item">获取温度降雨数据</div>
+           class="state-item">item-3</div>
     </div>
     <div class="item">
       <div id="item-4"
            title="土壤水分质控"
-           class="state-item">土壤水分质控</div>
+           class="state-item">item-4</div>
       <div>
         <div id="item-5"
              style="margin-top: 50px;"
              title="格点数据合成"
-             class="state-item">格点数据合成</div>
+             class="state-item">item-5</div>
       </div>
     </div>
     <div class="item">
       <div id="item-6"
            title="土壤水分日值平均"
-           class="state-item">土壤水分日值平均</div>
+           class="state-item">item-6</div>
       <div id="item-7"
            style="margin-top: 50px;"
            title="格点数据区域切割"
-           class="state-item">格点数据区域切割</div>
+           class="state-item">item-7</div>
     </div>
     <div class="item">
       <div id="item-8"
            title="土壤水分站点融合"
-           class="state-item">土壤水分站点融合</div>
+           class="state-item">item-8</div>
     </div>
     <div class="item">
       <div style="width:1px;height:84px"></div>
       <div id="item-9"
            title="OI融合"
-           class="state-item">OI融合</div>
+           class="state-item">item-9</div>
     </div>
     <div class="item">
       <div style="width:1px;height:84px"></div>
       <div id="item-10"
            title="土壤水分融合产品"
-           class="state-item">土壤水分融合产品</div>
+           class="state-item">item-10</div>
     </div>
     <div class="item">
       <div style="width:1px;height:84px"></div>
       <div id="item-11"
            title="创建干旱劳资产品"
-           class="state-item">创建干旱劳资产品</div>
+           class="state-item">item-11</div>
     </div>
   </div>
 </template>
