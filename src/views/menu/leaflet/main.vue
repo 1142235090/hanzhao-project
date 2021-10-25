@@ -12,6 +12,8 @@ import { beijing } from './beijing'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import 'heatmap.js'
+import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js'
 
 export default {
   name: 'leafletView',
@@ -46,6 +48,7 @@ export default {
     // 增加北京中心点的maker
     this.addMaker()
     this.addText()
+    this.setHeatMap()
   },
   methods: {
     initMap () {
@@ -57,7 +60,6 @@ export default {
         zoomOffset: -1
       }).addTo(this.map)
     },
-    // type your function
     addMaker () {
       // 添加maker
       L.marker([40.28, 116.48]).addTo(this.map)
@@ -71,7 +73,12 @@ export default {
         fillColor: 'transparent', // 区域填充颜色
         fillOpacity: 0 // 区域填充颜色的透明
       }
-      L.geoJSON(beijing, { style: style }).addTo(this.map) // features是指geojson数据
+      L.geoJSON(beijing, {
+        style: style,
+        onEachFeature: function (feature, layer) { // 绑定区域的点击事件
+          layer.bindPopup('<h1>' + feature.properties.name + '</h1>')
+        }
+      }).addTo(this.map) // features是指geojson数据
     },
     addText () {
       // 添加文字
@@ -81,14 +88,51 @@ export default {
         iconSize: 30
       })
       L.marker([40.28, 116.48], { icon: myIcon }).addTo(this.map)
+    },
+    setHeatMap () {
+      const option = {
+        // 热力图的配置项
+        radius: 0.5, // 设置每一个热力点的半径
+        maxOpacity: 0.5, // 设置最大的不透明度
+        // minOpacity: 0.3,     // 设置最小的不透明度
+        scaleRadius: true, // 设置热力点是否平滑过渡
+        blur: 0.95, // 系数越高，渐变越平滑，默认是0.85,
+        // 滤镜系数将应用于所有热点数据。
+        useLocalExtrema: true, // 使用局部极值
+        latField: 'lat', // 维度
+        lngField: 'lng', // 经度
+        valueField: 'count', // 热力点的值
+        gradient: {
+          0.99: 'rgba(255,0,0,1)',
+          0.8: 'rgba(255,255,0,1)',
+          0.7: 'rgba(0,255,0,1)',
+          0.5: 'rgba(0,255,255,1)',
+          0: 'rgba(0,0,255,1)'
+        }
+      }
+      const points = {
+        max: 15,
+        data: [
+          { lng: 116.48, lat: 40.28, count: 1 },
+          { lng: 116.48, lat: 40.19, count: 1 },
+          { lng: 116.48, lat: 40.37, count: 1 },
+          { lng: 116.48, lat: 40.26, count: 5 },
+          { lng: 116.50, lat: 41.29, count: 4 },
+          { lng: 117.47, lat: 40.27, count: 5 },
+          { lng: 116.66, lat: 40.26, count: 7 }
+        ]
+      }
+      this.heatmapLayer = new HeatmapOverlay(option)
+      this.heatmapLayer.addTo(this.map)
+      this.heatmapLayer.setData(points)
     }
-  },
-  filters: {
-
   }
 }
 </script>
 
 <style scoped lang='less'>
 @import "../../../../node_modules/leaflet/dist/leaflet.css";
+:deep(.leaflet-bottom.leaflet-right) {
+  display: none;
+}
 </style>
