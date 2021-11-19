@@ -70,6 +70,21 @@ export default {
         maximumLevel: 18
       })
       this.viewer.imageryLayers.addImageryProvider(imgMap)
+      // 天地图注记服务
+      var TDT_CVA_W = 'http://{s}.tianditu.gov.cn/cva_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
+        '&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
+        '&style=default.jpg&tk=' + this.tToken
+      const cia = new Cesium.WebMapTileServiceImageryProvider({   // 调用影响中文注记服务
+        url: TDT_CVA_W,
+        layer: 'cia_w',
+        style: 'default',
+        format: 'tiles',
+        tileMatrixSetID: 'GoogleMapsCompatible',
+        subdomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'], // 天地图8个服务器
+        minimumLevel: 0,
+        maximumLevel: 18
+      })
+      this.viewer.imageryLayers.addImageryProvider(cia)// 添加到cesium图层上
     },
     addCountryLine () {
       // 叠加国界服务

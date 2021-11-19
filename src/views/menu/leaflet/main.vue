@@ -92,7 +92,7 @@ export default {
     setHeatMap () {
       const option = {
         // 热力图的配置项
-        radius: 0.5, // 设置每一个热力点的半径
+        radius: 0.2, // 设置每一个热力点的半径
         maxOpacity: 0.5, // 设置最大的不透明度
         // minOpacity: 0.3,     // 设置最小的不透明度
         scaleRadius: true, // 设置热力点是否平滑过渡
@@ -102,7 +102,7 @@ export default {
         latField: 'lat', // 维度
         lngField: 'lng', // 经度
         valueField: 'count', // 热力点的值
-        gradient: {
+        gradient: { // 调整热力颜色和范围
           0.99: 'rgba(255,0,0,1)',
           0.8: 'rgba(255,255,0,1)',
           0.7: 'rgba(0,255,0,1)',
@@ -113,13 +113,15 @@ export default {
       const points = {
         max: 15,
         data: [
-          { lng: 116.48, lat: 40.28, count: 1 },
-          { lng: 116.48, lat: 40.19, count: 1 },
-          { lng: 116.48, lat: 40.37, count: 1 },
-          { lng: 116.48, lat: 40.26, count: 5 },
-          { lng: 116.50, lat: 41.29, count: 4 },
-          { lng: 117.47, lat: 40.27, count: 5 },
-          { lng: 116.66, lat: 40.26, count: 7 }
+          { lng: 116.48, lat: 40.01, count: 1 },
+          { lng: 116.48, lat: 40.05, count: 1 },
+          { lng: 116.63, lat: 40.13, count: 5 },
+          { lng: 116.58, lat: 40.16, count: 1 },
+          { lng: 116.68, lat: 40.26, count: 5 },
+          { lng: 117.01, lat: 40.31, count: 5 },
+          { lng: 116.50, lat: 40.52, count: 4 },
+          { lng: 116.47, lat: 40.88, count: 5 },
+          { lng: 116.66, lat: 40.91, count: 7 }
         ]
       }
       this.heatmapLayer = new HeatmapOverlay(option)
