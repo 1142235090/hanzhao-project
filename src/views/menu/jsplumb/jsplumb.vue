@@ -12,44 +12,43 @@
            class="state-item">item-3</div>
     </div>
     <div class="item">
-      <div id="item-4"
-           title="土壤水分质控"
-           class="state-item">item-4</div>
+      <div id="item-5"
+           title="格点数据合成"
+           class="state-item">item-5</div>
+
       <div>
-        <div id="item-5"
+        <div id="item-4"
              style="margin-top: 50px;"
-             title="格点数据合成"
-             class="state-item">item-5</div>
+             title="土壤水分质控"
+             class="state-item">item-4</div>
       </div>
     </div>
     <div class="item">
-      <div id="item-6"
-           title="土壤水分日值平均"
-           class="state-item">item-6</div>
       <div id="item-7"
-           style="margin-top: 50px;"
            title="格点数据区域切割"
            class="state-item">item-7</div>
+      <div id="item-6"
+           style="margin-top: 50px;"
+           title="土壤水分日值平均"
+           class="state-item">item-6</div>
     </div>
     <div class="item">
+      <div style="width:1px;height:84px"></div>
       <div id="item-8"
            title="土壤水分站点融合"
            class="state-item">item-8</div>
     </div>
     <div class="item">
-      <div style="width:1px;height:84px"></div>
       <div id="item-9"
            title="OI融合"
            class="state-item">item-9</div>
     </div>
     <div class="item">
-      <div style="width:1px;height:84px"></div>
       <div id="item-10"
            title="土壤水分融合产品"
            class="state-item">item-10</div>
     </div>
     <div class="item">
-      <div style="width:1px;height:84px"></div>
       <div id="item-11"
            title="创建干旱劳资产品"
            class="state-item">item-11</div>
@@ -72,11 +71,11 @@ export default {
     const plumbIns = jsPlumb.getInstance()
     this.plumbIns = plumbIns
     plumbIns.ready(function () {
-      $this.connect('item-1', 'item-4')
+      $this.connect('item-1', 'item-5')
       $this.connect('item-4', 'item-6')
       $this.connect('item-6', 'item-8')
-      $this.connect('item-2', 'item-5')
-      $this.connect('item-3', 'item-5')
+      $this.connect('item-2', 'item-4')
+      $this.connect('item-3', 'item-4')
       $this.connect('item-5', 'item-7')
       $this.connect('item-7', 'item-9')
       $this.connect('item-8', 'item-9')

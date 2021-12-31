@@ -20,7 +20,27 @@ export default {
   data () {
     return {
       map: null,
-      token: 'pk.eyJ1IjoiY2hyaXNld2Fybm5lciIsImEiOiJja3NwbjF6bjUwNGJtMm5rdHdlbjhyYm05In0.6bXLpBBZJCFXeYMX6pjL9w'
+      token: 'pk.eyJ1IjoiY2hyaXNld2Fybm5lciIsImEiOiJja3NwbjF6bjUwNGJtMm5rdHdlbjhyYm05In0.6bXLpBBZJCFXeYMX6pjL9w',
+      option: {
+        // 热力图的配置项
+        radius: 0.0096, // 设置每一个热力点的半径
+        maxOpacity: 1, // 设置最大的不透明度
+        minOpacity: 0.1,     // 设置最小的不透明度
+        scaleRadius: true, // 设置热力点是否平滑过渡
+        blur: 0.95, // 系数越高，渐变越平滑，默认是0.85,
+        // 滤镜系数将应用于所有热点数据。始终会出现一个红色斑点
+        useLocalExtrema: false, // 使用局部极值
+        latField: 'lat', // 维度
+        lngField: 'lng', // 经度
+        valueField: 'count' // 热力点的值
+        // gradient: { // 调整热力颜色和范围
+        //   0: 'rgba(255,0,0,1)'
+        //   // 0.8: 'rgba(255,255,0,1)',
+        //   // 0.7: 'rgba(0,255,0,1)',
+        //   // 0.5: 'rgba(0,255,255,1)',
+        //   // 0: 'rgba(0,0,255,1)'
+        // }
+      }
     }
   },
   components: {
@@ -36,19 +56,26 @@ export default {
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
+      shadowSize: [41, 41],
+      points: null
     })
     L.Marker.prototype.options.icon = DefaultIcon
   },
   mounted () {
+    // 加载数据
+    this.setValue()
     // 初始化
     this.initMap()
     // 增加边界
     this.addBoundary()
     // 增加北京中心点的maker
     this.addMaker()
+    // 添加文字
     this.addText()
+    // 设置热力图
     this.setHeatMap()
+    // 监听热力图放大缩小
+    this.changeMap()
   },
   methods: {
     initMap () {
@@ -90,43 +117,69 @@ export default {
       L.marker([40.28, 116.48], { icon: myIcon }).addTo(this.map)
     },
     setHeatMap () {
-      const option = {
-        // 热力图的配置项
-        radius: 0.2, // 设置每一个热力点的半径
-        maxOpacity: 0.5, // 设置最大的不透明度
-        // minOpacity: 0.3,     // 设置最小的不透明度
-        scaleRadius: true, // 设置热力点是否平滑过渡
-        blur: 0.95, // 系数越高，渐变越平滑，默认是0.85,
-        // 滤镜系数将应用于所有热点数据。
-        useLocalExtrema: true, // 使用局部极值
-        latField: 'lat', // 维度
-        lngField: 'lng', // 经度
-        valueField: 'count', // 热力点的值
-        gradient: { // 调整热力颜色和范围
-          0.99: 'rgba(255,0,0,1)',
-          0.8: 'rgba(255,255,0,1)',
-          0.7: 'rgba(0,255,0,1)',
-          0.5: 'rgba(0,255,255,1)',
-          0: 'rgba(0,0,255,1)'
+      this.heatmapLayer = new HeatmapOverlay(this.option)
+      this.heatmapLayer.addTo(this.map)
+      this.heatmapLayer.setData(this.points)
+    },
+    setValue () {
+      const data = []
+      for (let index = 0; index < 1999; index++) {
+        data[index] = {
+          lng: (115 + Math.round(Math.random() * 999) / 1000 + Math.round(Math.random() * 1)),
+          lat: (39 + Math.round(Math.random() * 999) / 1000 + Math.round(Math.random() * 1)),
+          count: 15
+        }
+      }
+      for (let index = 1999; index < 2999; index++) {
+        data[index] = {
+          lng: (115 + Math.round(Math.random() * 999) / 1000 + Math.round(Math.random() * 2)),
+          lat: (39 + Math.round(Math.random() * 999) / 1000 + Math.round(Math.random() * 2)),
+          count: 15
         }
       }
       const points = {
         max: 15,
-        data: [
-          { lng: 116.48, lat: 40.01, count: 1 },
-          { lng: 116.48, lat: 40.05, count: 1 },
-          { lng: 116.63, lat: 40.13, count: 5 },
-          { lng: 116.58, lat: 40.16, count: 1 },
-          { lng: 116.68, lat: 40.26, count: 5 },
-          { lng: 117.01, lat: 40.31, count: 5 },
-          { lng: 116.50, lat: 40.52, count: 4 },
-          { lng: 116.47, lat: 40.88, count: 5 },
-          { lng: 116.66, lat: 40.91, count: 7 }
-        ]
+        data: data
       }
-      this.heatmapLayer = new HeatmapOverlay(option)
-      this.heatmapLayer.addTo(this.map)
-      this.heatmapLayer.setData(points)
+      this.points = points
+    },
+    changeMap () {
+      this.map.on('zoomend', e => {
+        // 获取当前放大或者缩小的等级
+        const num = e.target.getZoom()
+        switch (num) {
+          case 6:
+            this.option.radius = 0.0512
+            break
+          case 7:
+            this.option.radius = 0.0256
+            break
+          case 8:
+            this.option.radius = 0.0128
+            break
+          case 9:
+            this.option.radius = 0.0096
+            break
+          case 10:
+            this.option.radius = 0.0064
+            break
+          case 11:
+            this.option.radius = 0.0032
+            break
+          case 12:
+            this.option.radius = 0.0016
+            break
+          case 13:
+            this.option.radius = 0.0008
+            break
+          case 14:
+            this.option.radius = 0.0004
+            break
+        }
+        console.log(num)
+      })
+      // 重新设定热力图
+      this.setHeatMap()
     }
   }
 }

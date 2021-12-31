@@ -26,13 +26,17 @@ export default {
     // 1.初始化3D地球
     this.initCesium()
     // 2.飞行到北京，并添加坐标点
-    this.cesiumFlyTo(117.3, 39.9, 800000, this.addPoint)
+    this.cesiumFlyTo(117.3, 39.9, 1600000, this.addPoint)
     // 3.添加地图影像
     this.addImageryLayers()
     // 4.添加国界线
     this.addCountryLine()
     // 5.添加遮罩层
     this.addMask()
+    // 6.添加立方体
+    this.addBox()
+    // 7.添加图片
+    this.addImages()
   },
   methods: {
     initCesium () {
@@ -57,8 +61,13 @@ export default {
       // 飞行到哪个位置
       this.viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(x, y, height),
-        duration: 8, // 多少秒完成跳转
-        complete: complete // 完成后的执行函数
+        duration: 3, // 多少秒完成跳转
+        complete: complete, // 完成后的执行函数
+        orientation: {
+          heading: Cesium.Math.toRadians(0), // 旋转 30左转 -30右转
+          pitch: Cesium.Math.toRadians(-60), // 仰角 -90正对着 -60在下头 -100在上头
+          roll: 0.0// 旋转 1左转 -1右转 以你给定为中心点做平面
+        }
       })
     },
     addImageryLayers () {
@@ -153,6 +162,33 @@ export default {
           material: stripeMaterial
         }
       })
+    },
+    addBox () {
+      // 添加立方体
+      this.viewer.entities.add({
+        name: 'Red box with black outline',
+        position: Cesium.Cartesian3.fromDegrees(-107.0, 40.0, 300000.0),
+        box: {
+          dimensions: new Cesium.Cartesian3(400000.0, 300000.0, 500000.0),
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        }
+      })
+    },
+    addImages () {
+      var entity = this.viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(113.637362, 34.575515),
+        ellipse: {
+          semiMinorAxis: 250000.0,
+          semiMajorAxis: 400000.0,
+          material: Cesium.Color.BLUE.withAlpha(0.5)
+        }
+      })
+      var ellipse = entity.ellipse
+      ellipse.material = 'https://img1.baidu.com/it/u=35233464,1442703426&fm=26&fmt=auto'
+      // entity.polygon.height = 200000
+      // entity.polygon.extrudedHeight = 250000
     },
     goBack () {
       // 返回上个界面
