@@ -1,19 +1,21 @@
 <template>
   <div>
-    <div id='map'
+    <div id='windy'
          style="width:100%;height:937px">
     </div>
   </div>
 </template>
 
 <script>
-import * as L from 'leaflet'
+import L from 'leaflet'
 import { beijing } from './beijing'
+import { data } from './windy'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'heatmap.js'
 import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js'
+import 'leaflet-velocity/dist/leaflet-velocity'
 
 export default {
   name: 'leafletView',
@@ -76,10 +78,32 @@ export default {
     this.setHeatMap()
     // 监听热力图放大缩小
     this.changeMap()
+    // 增加风场温度
+    this.addWindy()
   },
   methods: {
+    addWindy () {
+      var velocityLayer = L.velocityLayer({
+        displayValues: true, // 是否显示当前鼠标移动位置，风场信息
+        displayOptions: { // 显示信息配置
+          velocityType: 'Global Wind',
+          displayPosition: 'bottomleft',
+          displayEmptyString: 'No wind data'
+        },
+        data: data, // 数据  格式可参照
+        minVelocity: 0,  // 粒子最小速度（ m/s ）
+        maxVelocity: 5,  // 粒子最大速度（ m/s ）
+        velocityScale: 0.02,  // 风速的比例 ( 粒子的小尾巴长度 )
+        particleAge: 10,  // 粒子在再生之前绘制的最大帧数
+        lineWidth: 1,  // 绘制粒子的线宽
+        particleMultiplier: 1 / 1200,  // 粒子计数标量（ 粒子密度 ）
+        frameRate: 5,  // 每秒所需的帧数
+        colorScale: ['rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)']  // 定义自己的 hex / rgb 颜色数组 ( 粒子颜色 )
+      })
+      velocityLayer.addTo(this.map) // 添加到图上
+    },
     initMap () {
-      this.map = L.map('map').setView([40.28, 116.48], 9)
+      this.map = L.map('windy').setView([40.28, 116.48], 9)
       // 设置地图切片
       L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
         id: 'mapbox/satellite-v9',
@@ -148,6 +172,21 @@ export default {
         // 获取当前放大或者缩小的等级
         const num = e.target.getZoom()
         switch (num) {
+          case 1:
+            this.option.radius = 1.6384
+            break
+          case 2:
+            this.option.radius = 0.8192
+            break
+          case 3:
+            this.option.radius = 0.4096
+            break
+          case 4:
+            this.option.radius = 0.2048
+            break
+          case 5:
+            this.option.radius = 0.1024
+            break
           case 6:
             this.option.radius = 0.0512
             break
@@ -187,6 +226,7 @@ export default {
 
 <style scoped lang='less'>
 @import "../../../../node_modules/leaflet/dist/leaflet.css";
+@import "../../../../node_modules/leaflet-velocity/dist/leaflet-velocity.css";
 :deep(.leaflet-bottom.leaflet-right) {
   display: none;
 }
