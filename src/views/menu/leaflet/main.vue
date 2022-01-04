@@ -168,6 +168,8 @@ export default {
       this.points = points
     },
     changeMap () {
+      // 先取消监听，再重新绑定，避免出现多次重复绑定的问题
+      this.map.off('zoomend')
       this.map.on('zoomend', e => {
         // 获取当前放大或者缩小的等级
         const num = e.target.getZoom()
