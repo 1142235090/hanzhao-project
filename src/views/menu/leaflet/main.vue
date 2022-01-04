@@ -146,6 +146,7 @@ export default {
       this.heatmapLayer.setData(this.points)
     },
     setValue () {
+      // 模拟数据
       const data = []
       for (let index = 0; index < 1999; index++) {
         data[index] = {
@@ -169,56 +170,57 @@ export default {
     },
     changeMap () {
       // 先取消监听，再重新绑定，避免出现多次重复绑定的问题
-      this.map.off('zoomend')
-      this.map.on('zoomend', e => {
+      const $this = this
+      function change (e) {
         // 获取当前放大或者缩小的等级
         const num = e.target.getZoom()
         switch (num) {
           case 1:
-            this.option.radius = 1.6384
+            $this.option.radius = 1.6384
             break
           case 2:
-            this.option.radius = 0.8192
+            $this.option.radius = 0.8192
             break
           case 3:
-            this.option.radius = 0.4096
+            $this.option.radius = 0.4096
             break
           case 4:
-            this.option.radius = 0.2048
+            $this.option.radius = 0.2048
             break
           case 5:
-            this.option.radius = 0.1024
+            $this.option.radius = 0.1024
             break
           case 6:
-            this.option.radius = 0.0512
+            $this.option.radius = 0.0512
             break
           case 7:
-            this.option.radius = 0.0256
+            $this.option.radius = 0.0256
             break
           case 8:
-            this.option.radius = 0.0128
+            $this.option.radius = 0.0128
             break
           case 9:
-            this.option.radius = 0.0096
+            $this.option.radius = 0.0096
             break
           case 10:
-            this.option.radius = 0.0064
+            $this.option.radius = 0.0064
             break
           case 11:
-            this.option.radius = 0.0032
+            $this.option.radius = 0.0032
             break
           case 12:
-            this.option.radius = 0.0016
+            $this.option.radius = 0.0016
             break
           case 13:
-            this.option.radius = 0.0008
+            $this.option.radius = 0.0008
             break
           case 14:
-            this.option.radius = 0.0004
+            $this.option.radius = 0.0004
             break
         }
-        console.log(num)
-      })
+      }
+      this.map.off('zoomend', change)
+      this.map.on('zoomend', change)
       // 重新设定热力图
       this.setHeatMap()
     }
