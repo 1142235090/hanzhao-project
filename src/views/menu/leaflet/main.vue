@@ -11,11 +11,14 @@ import L from 'leaflet'
 import { beijing } from './beijing'
 import { data } from './windy'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import iconPlane from './icon_plane.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'heatmap.js'
 import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js'
 import 'leaflet-velocity/dist/leaflet-velocity'
+import 'leaflet.chinatmsproviders/src/leaflet.ChineseTmsProviders'
+import 'leaflet-polylinedecorator/dist/leaflet.polylineDecorator'
 
 export default {
   name: 'leafletView',
@@ -45,9 +48,6 @@ export default {
       }
     }
   },
-  components: {
-
-  },
   created () {
     // 替换掉默认的标记图
     const DefaultIcon = L.icon({
@@ -74,15 +74,119 @@ export default {
     this.addMaker()
     // 添加文字
     this.addText()
-    // 设置热力图
-    this.setHeatMap()
-    // 监听热力图放大缩小
-    this.changeMap()
-    // 增加风场温度
-    this.addWindy()
+    // // 设置热力图
+    // this.setHeatMap()
+    // // 监听热力图放大缩小
+    // this.changeMap()
+    // // 增加风场温度
+    // this.addWindy()
+    // 添加箭头路径
+    this.addSimplePoly()
+    // 添加不规则图形（支持中空）
+    this.addPolygon()
+    // 添加飞机路径
+    this.addflyPoly()
   },
   methods: {
+    addflyPoly () {
+      // 计算偏移量用于显示前进到了哪里
+      let offset = 0
+      // 初始化路线
+      let layer = this.fly(offset)
+      const $this = this
+      // 没过一秒钟更新一下界面生成动画
+      setInterval(function () {
+        // 清空上一次的界面显示
+        $this.map.removeLayer(layer)
+        // 增加前进距离
+        offset += 1
+        // 一旦前进到了100%则从头开始计算
+        if (offset === 100) {
+          offset = 0
+        }
+        // 保存layer用于清空上一次界面显示
+        layer = $this.fly(offset)
+      }, 1000)
+    },
+    fly (offset) {
+      // 路径节点
+      const list = [
+        [37.431453, 118.693571],
+        [38.117473, 117.688322],
+        [38.81423, 116.902799],
+        [39.478803, 117.331266],
+        [39.850917, 117.413663],
+        [40.279721, 116.633634]
+      ]
+      // 路径的参数配置
+      const layer = L.polylineDecorator(
+        list,
+        {
+          patterns: [
+            {
+              offset: 0, // 与起点之间的偏移量(谨慎修改，最好不要设定值，要与起点一致)
+              repeat: 10, // 路径线之间的间隔
+              symbol: L.Symbol.dash({
+                pixelSize: 5, // 线段长度
+                pathOptions: {
+                  color: '#fff', // 路径颜色
+                  weight: 2, // 线段宽度
+                  opacity: 1 // 路径透明度
+                }
+              })
+            },
+            {
+              offset: offset + '%', // 距离起点的偏移量
+              repeat: '100%', // 图标与图标之间的距离
+              symbol: L.Symbol.marker({
+                rotate: true, // 是否修改图标的方向，使其保持和线段一样的前进方向
+                markerOptions: {
+                  icon: L.icon({
+                    iconUrl: iconPlane, // 图标
+                    iconAnchor: [16, 16] // 图标大小
+                  })
+                }
+              })
+            }
+          ]
+        }
+      )
+      layer.addTo(this.map)
+      return layer
+    },
+    addPolygon () {
+      // 传入参数为两个数组，第一个为外圈，第二个为内圈
+      var polygon = L.polygon([[[54, -6], [55, -7], [56, -2], [55, 1], [53, 0]], [[54, -3], [54, -2], [55, -1], [55, -5]]], { color: '#ff7800', weight: 1 }).addTo(this.map)
+      L.polylineDecorator(polygon, {
+        patterns: [
+          { offset: 0, repeat: 10, symbol: L.Symbol.dash({ pixelSize: 0 }) }
+        ]
+      }).addTo(this.map)
+    },
+    addSimplePoly () {
+      // const list = [
+      //   [39.013479, 115.741221],
+      //   [39.182952, 115.857081],
+      //   [39.531234, 116.041102],
+      //   [39.801857, 116.222377],
+      //   [39.891282, 116.308659],
+      //   [39.948688, 116.328309]
+      // ]
+      const list2 = [[39.013479, 115.741221], [39.948688, 116.328309]]
+      var arrow = L.polyline(list2, {}).addTo(this.map)
+      const layer = L.polylineDecorator(arrow, {
+        patterns: [
+          { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, polygon: false, pathOptions: { stroke: true } }) }
+        ]
+      })
+      layer.addTo(this.map)
+      const $this = this
+      setTimeout(function () {
+        $this.map.removeLayer(layer)
+      }, 5000)
+    },
     addWindy () {
+      // 风场
       var velocityLayer = L.velocityLayer({
         displayValues: true, // 是否显示当前鼠标移动位置，风场信息
         displayOptions: { // 显示信息配置
@@ -96,20 +200,26 @@ export default {
         velocityScale: 0.02,  // 风速的比例 ( 粒子的小尾巴长度 )
         particleAge: 10,  // 粒子在再生之前绘制的最大帧数
         lineWidth: 1,  // 绘制粒子的线宽
-        particleMultiplier: 1 / 1200,  // 粒子计数标量（ 粒子密度 ）
+        particleMultiplier: 1 / 4800,  // 粒子计数标量（ 粒子密度 ）
         frameRate: 5,  // 每秒所需的帧数
         colorScale: ['rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)']  // 定义自己的 hex / rgb 颜色数组 ( 粒子颜色 )
       })
       velocityLayer.addTo(this.map) // 添加到图上
     },
     initMap () {
-      this.map = L.map('windy').setView([40.28, 116.48], 9)
       // 设置地图切片
-      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
-        id: 'mapbox/satellite-v9',
-        tileSize: 512,
-        zoomOffset: -1
+      this.map = L.map('windy').setView([40.28, 116.48], 9)
+      // 蓝色城市地图
+      L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
+        maxZoom: 18,
+        minZoom: 5
       }).addTo(this.map)
+      // // 地形图
+      // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
+      //   id: 'mapbox/satellite-v9',
+      //   tileSize: 512,
+      //   zoomOffset: -1
+      // }).addTo(this.map)
     },
     addMaker () {
       // 添加maker
