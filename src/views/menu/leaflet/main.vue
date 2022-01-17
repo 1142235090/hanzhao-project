@@ -74,12 +74,12 @@ export default {
     this.addMaker()
     // 添加文字
     this.addText()
-    // // 设置热力图
-    // this.setHeatMap()
-    // // 监听热力图放大缩小
-    // this.changeMap()
-    // // 增加风场温度
-    // this.addWindy()
+    // 设置热力图
+    this.setHeatMap()
+    // 监听热力图放大缩小
+    this.changeMap()
+    // 增加风场温度
+    this.addWindy()
     // 添加箭头路径
     this.addSimplePoly()
     // 添加不规则图形（支持中空）
@@ -94,7 +94,7 @@ export default {
       // 初始化路线
       let layer = this.fly(offset)
       const $this = this
-      // 没过一秒钟更新一下界面生成动画
+      // 每过一秒钟更新一下界面生成动画
       setInterval(function () {
         // 清空上一次的界面显示
         $this.map.removeLayer(layer)
@@ -180,10 +180,6 @@ export default {
         ]
       })
       layer.addTo(this.map)
-      const $this = this
-      setTimeout(function () {
-        $this.map.removeLayer(layer)
-      }, 5000)
     },
     addWindy () {
       // 风场
