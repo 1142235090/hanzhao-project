@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="lat-lon"></div>
     <div id='windy'
          style="width:100%;height:937px">
     </div>
@@ -74,18 +75,20 @@ export default {
     this.addMaker()
     // 添加文字
     this.addText()
-    // 设置热力图
-    this.setHeatMap()
-    // 监听热力图放大缩小
-    this.changeMap()
+    // // 设置热力图
+    // this.setHeatMap()
+    // // 监听热力图放大缩小
+    // this.changeMap()
     // 增加风场温度
     this.addWindy()
-    // 添加箭头路径
-    this.addSimplePoly()
-    // 添加不规则图形（支持中空）
-    this.addPolygon()
-    // 添加飞机路径
-    this.addflyPoly()
+    // // 添加箭头路径
+    // this.addSimplePoly()
+    // // 添加不规则图形（支持中空）
+    // this.addPolygon()
+    // // 添加飞机路径
+    // this.addflyPoly()
+    // 实时显示鼠标所在经纬度
+    this.showLatLon()
   },
   methods: {
     addflyPoly () {
@@ -193,10 +196,10 @@ export default {
         data: data, // 数据  格式可参照
         minVelocity: 0,  // 粒子最小速度（ m/s ）
         maxVelocity: 5,  // 粒子最大速度（ m/s ）
-        velocityScale: 0.02,  // 风速的比例 ( 粒子的小尾巴长度 )
+        velocityScale: 0.04,  // 风速的比例 ( 粒子的小尾巴长度 )
         particleAge: 10,  // 粒子在再生之前绘制的最大帧数
         lineWidth: 1,  // 绘制粒子的线宽
-        particleMultiplier: 1 / 4800,  // 粒子计数标量（ 粒子密度 ）
+        particleMultiplier: 1 / 3600,  // 粒子计数标量（ 粒子密度 ）
         frameRate: 5,  // 每秒所需的帧数
         colorScale: ['rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)']  // 定义自己的 hex / rgb 颜色数组 ( 粒子颜色 )
       })
@@ -205,17 +208,17 @@ export default {
     initMap () {
       // 设置地图切片
       this.map = L.map('windy').setView([40.28, 116.48], 9)
-      // 蓝色城市地图
-      L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
-        maxZoom: 18,
-        minZoom: 5
-      }).addTo(this.map)
-      // // 地形图
-      // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
-      //   id: 'mapbox/satellite-v9',
-      //   tileSize: 512,
-      //   zoomOffset: -1
+      // // 蓝色城市地图
+      // L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
+      //   maxZoom: 18,
+      //   minZoom: 5
       // }).addTo(this.map)
+      // 地形图
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
+        id: 'mapbox/satellite-v9',
+        tileSize: 512,
+        zoomOffset: -1
+      }).addTo(this.map)
     },
     addMaker () {
       // 添加maker
@@ -329,6 +332,13 @@ export default {
       this.map.on('zoomend', change)
       // 重新设定热力图
       this.setHeatMap()
+    },
+    showLatLon () {
+      // 监听 mousemove 事件
+      this.map.on('mousemove', (e) => {
+        const latlng = e.latlng
+        document.getElementById('lat-lon').innerHTML = latlng
+      })
     }
   }
 }
