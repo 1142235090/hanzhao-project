@@ -6,13 +6,13 @@ const data = [
     header: { // u风向由西到冬
       parameterUnit: 'm.s - 1',
       parameterNumber: 2,
-      dx: 0.3442,
-      dy: 0.2612,
+      dx: 0.6888,
+      dy: 0.5242,
       lo1: 73, // 西北角
       la1: 62, // 西北角
       parameterCategory: 2,
-      nx: 180,
-      ny: 206
+      nx: 90,
+      ny: 103
     },
     data: us
   },
@@ -20,13 +20,13 @@ const data = [
     header: { // v风向由北向南
       parameterUnit: 'm.s - 1',
       parameterNumber: 3,
-      dx: 0.3442,
-      dy: 0.2612,
+      dx: 0.6888,
+      dy: 0.5242,
       lo1: 73,
       la1: 62,
       parameterCategory: 2, // 固定值
-      nx: 180,
-      ny: 206
+      nx: 90,
+      ny: 103
     },
     data: vs
   }

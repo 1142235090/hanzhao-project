@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+  lintOnSave: false, // 是否开启代码审查
   runtimeCompiler: true,
   configureWebpack: {
     plugins: [

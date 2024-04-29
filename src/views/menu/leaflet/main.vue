@@ -1,8 +1,8 @@
 <template>
   <div>
+    <div id="pic_img">点击截图</div>
     <div id="lat-lon"></div>
-    <div id='windy'
-         style="width:100%;height:937px">
+    <div id='windy' style="width:100%;height:937px">
     </div>
   </div>
 </template>
@@ -12,6 +12,10 @@ import L from 'leaflet'
 import { beijing } from './beijing'
 import { data } from './windy'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import RHS from './RHS.png'
+import xxx from './xxx.png'
+import fy4a from './fy4a.png'
+import {base64} from './base64.js'
 import iconPlane from './icon_plane.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
@@ -20,6 +24,7 @@ import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.j
 import 'leaflet-velocity/dist/leaflet-velocity'
 import 'leaflet.chinatmsproviders/src/leaflet.ChineseTmsProviders'
 import 'leaflet-polylinedecorator/dist/leaflet.polylineDecorator'
+import ScreenShort from "js-web-screen-shot";
 
 export default {
   name: 'leafletView',
@@ -70,25 +75,48 @@ export default {
     // 初始化
     this.initMap()
     // 增加边界
-    this.addBoundary()
+    // this.addBoundary()
     // 增加北京中心点的maker
     this.addMaker()
     // 添加文字
     this.addText()
-    // // 设置热力图
-    // this.setHeatMap()
-    // // 监听热力图放大缩小
+    // 添加base64图片
+    // this.addBase64()
+    // 设置热力图
+    this.setHeatMap()
+    var $this = this;
+    setInterval(() => {
+      console.log("到底执行了吗")
+      $this.refushHeatMap()
+    }, 1000);
+    // 监听热力图放大缩小
     // this.changeMap()
     // 增加风场温度
-    this.addWindy()
-    // // 添加箭头路径
+    // this.addWindy()
+    // 添加箭头路径
     // this.addSimplePoly()
-    // // 添加不规则图形（支持中空）
+    // 添加不规则图形（支持中空）
     // this.addPolygon()
-    // // 添加飞机路径
+    // 添加飞机路径
     // this.addflyPoly()
     // 实时显示鼠标所在经纬度
-    this.showLatLon()
+    // this.showLatLon()
+    // 添加中国区域湿度图
+    // this.addRHS()
+    // 添加中国区域湿度图
+    // this.addFy4a()
+    // 截图功能
+    // document.getElementById("pic_img").addEventListener('click', function () {
+    //   // 截图确认按钮回调函数
+    //   const callback = (base64) => {
+    //     console.log(base64);
+    //   }
+    //   // 截图取消时的回调函数
+    //   const closeFn = () => {
+    //     console.log("截图窗口关闭")
+    //   }
+    //   new ScreenShort({ enableWebRtc: true, completeCallback: callback, closeCallback: closeFn })
+    // })
   },
   methods: {
     addflyPoly () {
@@ -187,42 +215,65 @@ export default {
     addWindy () {
       // 风场
       var velocityLayer = L.velocityLayer({
-        displayValues: true, // 是否显示当前鼠标移动位置，风场信息
+        // minVelocity: 0,  // 粒子最小速度（ m/s ）
+        // velocityScale: 0.15,  // 风速的比例 ( 粒子的小尾巴长度 )
+        // particleAge: 20,  // 粒子在再生之前绘制的最大帧数
+        lineWidth: 2,  // 绘制粒子的线宽
+        // particleMultiplier: 1 / 5000,  // 粒子计数标量（ 粒子密度 ）
+        // frameRate: 5,  // 每秒所需的帧数
+
         displayOptions: { // 显示信息配置
           velocityType: 'Global Wind',
+          // velocityType: 'GBR Wind',
           displayPosition: 'bottomleft',
           displayEmptyString: 'No wind data'
         },
+        displayValues: true, // 是否显示当前鼠标移动位置，风场信息
         data: data, // 数据  格式可参照
-        minVelocity: 0,  // 粒子最小速度（ m/s ）
-        maxVelocity: 5,  // 粒子最大速度（ m/s ）
-        velocityScale: 0.04,  // 风速的比例 ( 粒子的小尾巴长度 )
-        particleAge: 10,  // 粒子在再生之前绘制的最大帧数
-        lineWidth: 1,  // 绘制粒子的线宽
-        particleMultiplier: 1 / 3600,  // 粒子计数标量（ 粒子密度 ）
-        frameRate: 5,  // 每秒所需的帧数
-        colorScale: ['rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)', 'rgb(255,255,255)']  // 定义自己的 hex / rgb 颜色数组 ( 粒子颜色 )
+        maxVelocity: 0.6, // 最大风速
+        velocityScale: 0.1 // arbitrary default 0.005
       })
       velocityLayer.addTo(this.map) // 添加到图上
     },
     initMap () {
-      // 设置地图切片
+      // 设置地图
       this.map = L.map('windy').setView([40.28, 116.48], 9)
-      // // 蓝色城市地图
-      // L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
-      //   maxZoom: 18,
-      //   minZoom: 5
-      // }).addTo(this.map)
-      // 地形图
-      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
-        id: 'mapbox/satellite-v9',
-        tileSize: 512,
-        zoomOffset: -1
+      // 蓝色城市地图
+      L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
+        maxZoom: 18,
+        minZoom: 5
       }).addTo(this.map)
+      // // 地形图
+      // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + this.token, {
+      //   id: 'mapbox/satellite-v9',
+      //   tileSize: 512,
+      //   zoomOffset: -1
+      // }).addTo(this.map)
     },
     addMaker () {
       // 添加maker
       L.marker([40.28, 116.48]).addTo(this.map)
+    },
+    addRHS () {
+      // 添加中国区域湿度图
+      var imageBounds = [[62, 73], [8, 135]] // 图片的经纬度范围，西南角点,东北角点(纬度、经度)
+      var imageUrl = xxx // 图片的地址
+      var imageLayer = L.imageOverlay(imageUrl, imageBounds, { opacity: 0.8 }) // opacity是透明度
+      this.map.addLayer(imageLayer)
+    },
+    addBase64 () {
+      // 添加中国区域湿度图
+      var imageBounds = [[62, 73], [8, 135]] // 图片的经纬度范围，西南角点,东北角点(纬度、经度)
+      var imageUrl = base64 // 图片的地址
+      var imageLayer = L.imageOverlay(imageUrl, imageBounds, { opacity: 0.8 }) // opacity是透明度
+      this.map.addLayer(imageLayer)
+    },
+    addFy4a () {
+      // 添加中国区域湿度图
+      var imageBounds = [[62, 73], [8, 135]] // 图片的经纬度范围，西南角点,东北角点(纬度、经度)
+      var imageUrl = fy4a // 图片的地址
+      var imageLayer = L.imageOverlay(imageUrl, imageBounds, { opacity: 0.8 }) // opacity是透明度
+      this.map.addLayer(imageLayer)
     },
     addBoundary () {
       // 增加瓦片
@@ -253,6 +304,14 @@ export default {
       this.heatmapLayer = new HeatmapOverlay(this.option)
       this.heatmapLayer.addTo(this.map)
       this.heatmapLayer.setData(this.points)
+    },
+    refushHeatMap(){
+      this.points.data.forEach(element => {
+        element.lng = element.lng + 0.01
+        element.lat =  element.lat + 0.01
+      });
+      this.heatmapLayer.setData(this.points)
+      this.heatmapLayer._draw()
     },
     setValue () {
       // 模拟数据
@@ -347,6 +406,7 @@ export default {
 <style scoped lang='less'>
 @import "../../../../node_modules/leaflet/dist/leaflet.css";
 @import "../../../../node_modules/leaflet-velocity/dist/leaflet-velocity.css";
+
 :deep(.leaflet-bottom.leaflet-right) {
   display: none;
 }

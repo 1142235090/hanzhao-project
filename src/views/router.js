@@ -3,6 +3,8 @@ import leafletComponent from '@/views/menu/leaflet/main'
 import echarsmapComponent from '@/views/menu/echarsmap/main'
 import jsplumpComponent from '@/views/menu/jsplumb/jsplumb'
 import treejsComponent from '@/views/menu/treejs/treejs'
+import luckyComponent from '@/views/menu/lucky/lucky'
+
 
 const routers = [
   {
@@ -26,6 +28,13 @@ const routers = [
     value: '三维展示',
     typeOptions: [
       { code: '0', value: 'treejs', index: 3, path: '/treejs', name: 'treejs', component: treejsComponent }
+    ]
+  },
+  {
+    code: '3',
+    value: '抽奖程序',
+    typeOptions: [
+      { code: '0', value: '幸运抽奖', index: 4, path: '/lucky', name: 'lucky', component: luckyComponent }
     ]
   }
 ]
